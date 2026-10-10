@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Igara ID Studio</title>
+<style>
+:root{--bg:#f4f6f9;--card:#fff;--ink:#10263f;--mut:#667085;--line:#dfe4ea;--pri:#2f6a1b;--pri2:#245214;--warn:#b54708;--bad:#b42318;--ok:#067647}
+@media (prefers-color-scheme:dark){:root{--bg:#10161d;--card:#18212b;--ink:#e6edf5;--mut:#98a4b3;--line:#2a3643;--pri:#4c9a33;--pri2:#5fb046;--warn:#f79009;--bad:#f97066;--ok:#47cd89}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif}
+header{background:var(--pri);color:#fff;padding:14px 24px;display:flex;align-items:baseline;gap:14px}
+header h1{margin:0;font-size:20px}header span{opacity:.85;font-size:13px}
+nav{display:flex;gap:4px;padding:10px 24px 0;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:5}
+nav button{border:0;background:none;padding:10px 16px;font:inherit;color:var(--mut);cursor:pointer;border-bottom:3px solid transparent}
+nav button.on{color:var(--ink);border-color:var(--pri);font-weight:600}
+main{max-width:1100px;margin:0 auto;padding:22px}
+section{display:none}section.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:18px}
+h2{margin:0 0 4px;font-size:17px}p.h{margin:0 0 14px;color:var(--mut);font-size:13px}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 3px}
+input,select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:7px 10px;width:100%}
+textarea{font-family:ui-monospace,Consolas,monospace;font-size:12px;min-height:220px}
+button.b{background:var(--pri);color:#fff;border:0;border-radius:8px;padding:8px 16px;font:inherit;font-weight:600;cursor:pointer}
+button.b:hover{background:var(--pri2)}button.b.alt{background:none;color:var(--ink);border:1px solid var(--line)}button.b:disabled{opacity:.5;cursor:wait}
+.row{display:flex;gap:10px;align-items:end;flex-wrap:wrap}.row>*{flex:1}.row>button{flex:none}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:600;font-size:12px}
+td input{padding:5px 8px}
+.pill{display:inline-block;padding:1px 9px;border-radius:99px;font-size:12px;font-weight:600}
+.ok{background:#d1fadf;color:#05603a}.warn{background:#fef0c7;color:#93370d}.bad{background:#fee4e2;color:#b42318}
+.chips{display:flex;gap:14px;flex-wrap:wrap;margin:6px 0}.chips label{display:flex;gap:6px;align-items:center;margin:0;color:var(--ink);font-size:14px}.chips input{width:auto}
+pre{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px;font-size:12px;max-height:260px;overflow:auto;white-space:pre-wrap;margin:10px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:12px}
+.tile{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg)}
+.tile img{width:100%;height:120px;object-fit:contain;display:block;background:#fff}
+.tile div{padding:5px 7px;font-size:11px;word-break:break-word}.tile .rb{display:flex;gap:4px;padding:0 7px 7px}
+.tile .rb button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer;padding:3px}
+.bar{height:12px;background:var(--line);border-radius:99px;overflow:hidden;margin:10px 0}.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .3s}
+.two{display:grid;grid-template-columns:1fr 1.15fr;gap:18px}@media(max-width:850px){.two{grid-template-columns:1fr}}
+#pv{width:100%;border:1px solid var(--line);border-radius:10px;background:#fff;min-height:120px}
+.msg{font-size:13px;color:var(--mut);margin-top:8px}
+
+.pill.mut{background:var(--line);color:var(--mut)}
+.dz{border:2px dashed var(--line);border-radius:12px;padding:16px;text-align:center;transition:.15s}
+.dz.over{border-color:var(--pri);background:var(--bg)}.dz b{font-size:15px}.dz .row{margin-top:10px}
+.tb{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px}.tb .sp{flex:1}
+.irow{display:grid;grid-template-columns:190px 310px 1fr;gap:16px;padding:12px;border:1px solid var(--line);border-radius:10px;margin-top:10px;background:var(--bg);align-items:start}
+.irow.rev{border-color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn)}
+.irow img{width:100%;height:auto;border-radius:6px;background:#fff;display:block;cursor:zoom-in;border:1px solid var(--line)}
+.ia{display:flex;gap:4px;margin-top:6px;flex-wrap:wrap}
+.ia button,.addb{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:6px;cursor:pointer;padding:3px 8px;font:inherit;font-size:12px}
+.ia button:hover,.addb:hover{border-color:var(--pri)}
+.wait{display:grid;place-items:center;min-height:110px;color:var(--mut);font-size:12px;background:var(--card);border:1px dashed var(--line);border-radius:6px;text-align:center;padding:6px}
+.irow .nm{font-weight:600;font-size:15px;text-transform:uppercase}
+.irow .ocr{font-size:12px;color:var(--mut);margin-top:6px;word-break:break-word}
+.fl{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+dialog{background:var(--card);color:var(--ink);border:1px solid var(--line);border-radius:12px;width:min(640px,92vw);padding:18px}
+dialog::backdrop{background:rgba(0,0,0,.45)}dialog textarea{min-height:300px;font-size:13px}
+@media(max-width:850px){.irow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>Igara ID Studio</h1><span>Student ID card automation</span></header>
+<nav id="nav">
+  <button data-t="intake" class="on">1 · Intake</button>
+  <button data-t="setup">2 · Setup</button>
+  <button data-t="prep">3 · Prepare images</button>
+  <button data-t="cls">4 · Classes &amp; layout</button>
+  <button data-t="gen">5 · Generate</button>
+</nav>
+<main>
+
+<section id="intake" class="on">
+  <div class="card">
+    <h2>Intake – raw photos &amp; signature sheets → passports + signatures</h2>
+    <p class="h">Pick a class, drop in the raw pictures, and the app crops passport-style (head, shoulders, upper chest), cuts out each signature, and names both by reading the name written on the paper. Check the list, fix anything, then save into the project. Everything runs on this computer – no photos are uploaded anywhere.</p>
+    <div class="row">
+      <div><label>Class</label><select id="iCls" onchange="iLoad()"></select></div>
+      <div><label>Passport size (px)</label><select id="iPreset" onchange="iPresetChg()">
+        <option value="2605x3120">2605 × 3120 (your standard)</option>
+        <option value="1303x1560">1303 × 1560 (half – plenty for the ID)</option>
+        <option value="868x1040">868 × 1040</option>
+        <option value="custom">Custom…</option></select></div>
+      <div id="iCustom" hidden><label>Width × Height</label><div style="display:flex;gap:6px"><input id="iW" type="number" onchange="iSaveSet()"><input id="iH" type="number" onchange="iSaveSet()"></div></div>
+      <div><label>Framing preset</label><select id="iFrame" onchange="iFramePick()">
+        <option value="2.1,0.215">Passport reference (tight)</option>
+        <option value="3.05,0.18">Looser (like make_passport.py)</option>
+        <option value="custom">Custom…</option></select></div>
+      <div><label>Size: tighter ◂ ▸ looser</label><input id="iScale" type="range" min="1.6" max="3.6" step="0.05" onchange="iSliders()"></div>
+      <div><label>Headroom</label><input id="iTop" type="range" min="0.05" max="0.45" step="0.005" onchange="iSliders()"></div>
+      <div><label>Signature size</label><div style="display:flex;gap:6px"><input id="sW" type="number" onchange="iSaveSet()"><input id="sH" type="number" onchange="iSaveSet()"></div></div>
+      <button class="b alt" onclick="iRecrop()" title="Apply the current size/framing to everything already in this class">Re-crop all</button>
+    </div>
+    <div class="msg" id="iCaps"></div>
+  </div>
+
+  <div class="two">
+    <div class="card"><div class="dz" id="dzPhoto">
+      <b>1 · Student photos</b>
+      <p class="h">Any size/orientation, with the student holding their name on paper.</p>
+      <input type="file" id="fPhoto" multiple accept="image/*" hidden>
+      <button class="b" onclick="$('#fPhoto').click()">Choose photos</button> <span class="msg">or drag &amp; drop</span>
+      <div class="row"><input id="pPhoto" placeholder="…or import a folder path"><button class="b alt" onclick="iImport('photo')">Import</button></div>
+    </div></div>
+    <div class="card"><div class="dz" id="dzSign">
+      <b>2 · Signature sheets</b>
+      <p class="h">Photos/scans of the paper with the signature and the name written on it.</p>
+      <input type="file" id="fSign" multiple accept="image/*" hidden>
+      <button class="b" onclick="$('#fSign').click()">Choose signature images</button> <span class="msg">or drag &amp; drop</span>
+      <div class="row"><input id="pSign" placeholder="…or import a folder path"><button class="b alt" onclick="iImport('sign')">Import</button></div>
+    </div></div>
+  </div>
+
+  <div class="card">
+    <div class="tb">
+      <h2 style="margin:0">Review</h2><span class="msg" id="iSum"></span><span class="sp"></span>
+      <label style="display:flex;gap:6px;align-items:center;margin:0"><input type="checkbox" id="iOnly" style="width:auto" onchange="iRender()"> needs review only</label>
+      <button class="b alt" onclick="openRoster()">Class list…</button>
+      <button class="b alt" onclick="openNames()">Edit all names…</button>
+      <button class="b" onclick="iCommit()">Save to project ▸</button>
+    </div>
+    <div class="msg" id="iUp"></div>
+    <div class="bar" id="iBarW" hidden><i id="iBar"></i></div>
+    <div id="iRows"></div>
+  </div>
+  <input type="file" id="fRep" accept="image/*" hidden>
+
+  <dialog id="dRoster">
+    <h2>Class list</h2>
+    <p class="h">Paste the official student names, one per line. Names read from the paper are matched to this list, which fixes most handwriting mistakes (like a letter hidden behind a finger).</p>
+    <textarea id="rText" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:12px"><button class="b" onclick="saveRoster(true)">Save &amp; re-match names</button>
+      <button class="b alt" onclick="saveRoster(false)">Save only</button><button class="b alt" onclick="$('#dRoster').close()">Close</button></div>
+  </dialog>
+  <dialog id="dNames">
+    <h2>Edit all names</h2>
+    <p class="h">One name per line, in the same order as the list. Change the text on any line, but don’t add or delete lines.</p>
+    <textarea id="nText" spellcheck="false"></textarea>
+    <div class="row" style="margin-top:12px"><button class="b" onclick="applyNames()">Apply</button><button class="b alt" onclick="$('#dNames').close()">Close</button></div>
+  </dialog>
+</section>
+
+<section id="setup">
+  <div class="card">
+    <h2>Project folder</h2>
+    <p class="h">The folder that contains S.1 … S.6, SIGNS and <code>new/empty template.png</code> (your “gara id” folder).</p>
+    <div class="row"><div><label>Folder path</label><input id="base" placeholder="/home/you/Desktop/gara id"></div>
+    <button class="b" onclick="saveBase()">Save &amp; check</button></div>
+    <div id="sysmsg" class="msg"></div>
+  </div>
+  <div class="card">
+    <h2>ID template</h2>
+    <p class="h">The blank card design (<code>1011 × 638</code> PNG). Stored as <code>new/empty template.png</code> in the project folder.</p>
+    <div class="row"><div><input type="file" id="fTpl" accept="image/png,image/jpeg"></div><button class="b" onclick="upTemplate()">Upload template</button></div>
+    <div class="msg" id="tplMsg"></div>
+  </div>
+  <div class="card">
+    <h2>Status</h2><p class="h">Photos found per class, signatures missing, and IDs already generated.</p>
+    <table><thead><tr><th>Folder</th><th>Images</th><th>Missing signature</th><th>IDs generated</th><th>Backup</th></tr></thead><tbody id="stat"></tbody></table>
+    <div class="msg"><button class="b alt" onclick="loadScan()">Refresh</button></div>
+  </div>
+</section>
+
+<section id="prep">
+  <div class="card">
+    <h2>A · Clean file names</h2>
+    <p class="h">Turns double spaces into single spaces (<code>AGABA  ALEX.jpg → AGABA ALEX.jpg</code>). Nothing else is renamed.</p>
+    <div class="chips" id="cleanChips"></div>
+    <button class="b alt" onclick="clean(false)">Preview</button> <button class="b" onclick="clean(true)">Apply</button>
+    <pre id="cleanOut" hidden></pre>
+  </div>
+  <div class="card">
+    <h2>B · Check &amp; rotate</h2>
+    <p class="h">Fix sideways pictures one by one, or rotate a whole folder. Originals are backed up to <code>_originals/</code> before the first change, so you can restore.</p>
+    <div class="row"><div><label>Folder</label><select id="gFolder" onchange="loadGallery()"></select></div>
+      <button class="b alt" onclick="rotAll(90)">⟲ All left</button>
+      <button class="b alt" onclick="rotAll(-90)">⟳ All right</button>
+      <button class="b alt" onclick="restore()">Restore originals</button></div>
+    <div class="grid" id="gal"></div>
+  </div>
+  <div class="card">
+    <h2>C · Standardise signatures (360 × 135)</h2>
+    <p class="h">Scales every file in SIGNS to fit 360×135 without stretching, centred on white. Rotate first, then resize.</p>
+    <button class="b" onclick="resizeSigns()">Resize all signatures</button><span class="msg" id="rsOut"></span>
+  </div>
+</section>
+
+<section id="cls">
+  <div class="card">
+    <h2>Class details</h2>
+    <p class="h">These are printed on the ID. “First no.” is the number given to the first student (alphabetical order).</p>
+    <table><thead><tr><th>Class</th><th>ID prefix</th><th>Class text</th><th>Valid until</th><th>First no.</th></tr></thead><tbody id="ctab"></tbody></table>
+    <div class="row"><div><label>Date of issue</label><input id="issue"></div>
+      <div><label>Font size (pt)</label><input id="fpt" type="number" step="0.1"></div>
+      <div><label>DPI</label><input id="dpi" type="number"></div>
+      <div><label>Montserrat font file (optional)</label><input id="fpath" placeholder="auto-detect"></div></div>
+  </div>
+  <div class="card">
+    <h2>Layout (advanced)</h2>
+    <p class="h">Pixel positions on the 1011×638 template. If text or the photo is a few pixels off, adjust here and check the preview in step 4.</p>
+    <textarea id="layout" spellcheck="false"></textarea>
+    <div style="margin-top:12px"><button class="b" onclick="saveCfg()">Save settings</button> <span class="msg" id="cfgOut"></span></div>
+  </div>
+</section>
+
+<section id="gen">
+  <div class="two">
+    <div class="card">
+      <h2>Preview</h2><p class="h">Uses the saved settings.</p>
+      <div class="row"><div><label>Class</label><select id="pvCls" onchange="loadStudents()"></select></div>
+      <div><label>Student</label><select id="pvName"></select></div>
+      <button class="b alt" onclick="preview()">Show</button></div>
+      <p class="msg" id="pvMsg"></p><img id="pv" alt="">
+    </div>
+    <div class="card">
+      <h2>Generate IDs</h2><p class="h">Output goes to <code>new/&lt;class&gt;/</code> inside your project folder.</p>
+      <div class="chips" id="genChips"></div>
+      <div class="chips"><label><input type="checkbox" id="optTest"> Test run (3 students per class)</label>
+        <label><input type="checkbox" id="optPdf"> Also make A4 print sheet PDF</label></div>
+      <button class="b" id="genBtn" onclick="generate()">Generate</button>
+      <div class="bar"><i id="bar"></i></div><div class="msg" id="prog"></div>
+      <div id="dl" class="chips"></div>
+      <pre id="probs" hidden></pre>
+    </div>
+  </div>
+</section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const api=async(u,o)=>{const r=await fetch(u,o);if(!r.ok){let m=r.statusText;try{m=(await r.json()).error||m}catch(e){}throw new Error(m)}return r};
+const J=async(u,b)=>(await api(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)})).json();
+const G=async u=>(await api(u)).json();
+let CFG=null,SCAN=null;
+
+document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#nav button,section').forEach(e=>e.classList.remove('on'));
+  b.classList.add('on');$('#'+b.dataset.t).classList.add('on');
+  if(b.dataset.t=='gen')loadStudents(); if(b.dataset.t=='prep')loadGallery(); if(b.dataset.t=='intake')iLoad();
+});
+
+function chips(el,names,checked=true){$(el).innerHTML=names.map(n=>`<label><input type="checkbox" value="${n}" ${checked?'checked':''}> ${n}</label>`).join('')}
+const picked=el=>[...document.querySelectorAll(el+' input:checked')].map(i=>i.value);
+const pill=(t,c)=>`<span class="pill ${c}">${t}</span>`;
+
+async function init(){CFG=await G('/api/config');$('#base').value=CFG.base;fillCfg();await loadScan();iInit();}
+async function saveBase(){CFG.base=$('#base').value.trim();await J('/api/config',{base:CFG.base});await loadScan()}
+
+async function loadScan(){
+  SCAN=await G('/api/scan');
+  const msgs=[];
+  msgs.push(SCAN.base_exists?pill('folder found','ok'):pill('folder not found','bad'));
+  msgs.push(SCAN.template?pill('template found','ok'):pill('new/empty template.png missing','bad'));
+  msgs.push(SCAN.font?pill('Montserrat found','ok'):pill('Montserrat not found (fallback font) – sudo apt install fonts-montserrat','warn'));
+  $('#sysmsg').innerHTML=msgs.join(' ');
+  $('#stat').innerHTML=SCAN.folders.map(f=>`<tr><td><b>${f.name}</b></td>
+    <td>${f.exists?f.count:pill('missing','bad')}</td>
+    <td>${f.name=='SIGNS'?'–':(f.missing_signs.length?pill(f.missing_signs.length+' missing','warn')+` <span class="msg" title="${f.missing_signs.join(', ')}">hover</span>`:pill('all matched','ok'))}</td>
+    <td>${f.name=='SIGNS'?'–':f.generated}</td><td>${f.has_backup?pill('yes','ok'):'–'}</td></tr>`).join('');
+  const names=SCAN.folders.map(f=>f.name), cls=names.filter(n=>n!='SIGNS');
+  chips('#cleanChips',names);chips('#genChips',cls);
+  $('#gFolder').innerHTML=names.map(n=>`<option>${n}</option>`).join('');
+  $('#pvCls').innerHTML=cls.map(n=>`<option>${n}</option>`).join('');
+}
+
+async function upTemplate(){const f=$('#fTpl').files[0];if(!f)return;const fd=new FormData();fd.append('file',f);
+  try{const r=await(await api('/api/template',{method:'POST',body:fd})).json();
+    $('#tplMsg').innerHTML=r.ok?pill('template saved (1011×638)','ok'):pill(`saved, but it is ${r.width}×${r.height} – the layout assumes 1011×638`,'warn');loadScan()}catch(e){$('#tplMsg').textContent='Error: '+e.message}}
+/* ---- prepare ---- */
+async function clean(apply){
+  const out=$('#cleanOut');out.hidden=false;out.textContent='Working…';
+  try{const r=await J('/api/clean',{folders:picked('#cleanChips'),apply});
+    let t='',n=0;for(const[f,l]of Object.entries(r)){for(const x of l){n++;t+=`[${f}] ${x.old}  ->  ${x.new}   (${x.status})\n`}}
+    out.textContent=n?t:'Nothing to change – all names are already clean.';loadScan()}catch(e){out.textContent='Error: '+e.message}
+}
+async function loadGallery(){
+  const f=$('#gFolder').value;if(!f)return;
+  const imgs=await G('/api/images?folder='+encodeURIComponent(f));
+  $('#gal').innerHTML=imgs.map(i=>`<div class="tile"><img loading="lazy" src="/api/thumb?folder=${encodeURIComponent(f)}&name=${encodeURIComponent(i.name)}&v=${i.v}">
+    <div>${i.name.replace(/</g,'&lt;')}</div><div class="rb"><button data-n="${encodeURIComponent(i.name)}" data-d="90">⟲</button><button data-n="${encodeURIComponent(i.name)}" data-d="-90">⟳</button></div></div>`).join('')||'<p class="msg">No images.</p>';
+  document.querySelectorAll('#gal button').forEach(b=>b.onclick=async()=>{
+    await J('/api/rotate',{folder:f,names:[decodeURIComponent(b.dataset.n)],degrees:+b.dataset.d});loadGallery()});
+}
+async function rotAll(d){const f=$('#gFolder').value;
+  if(!confirm(`Rotate EVERY image in ${f} ${d>0?'left':'right'}? (originals are backed up)`))return;
+  await J('/api/rotate',{folder:f,degrees:d});loadGallery();loadScan()}
+async function restore(){const f=$('#gFolder').value;
+  if(!confirm(`Restore all original files of ${f}? This discards rotations/resizes.`))return;
+  const r=await J('/api/restore',{folder:f});alert(r.restored+' files restored');loadGallery();loadScan()}
+async function resizeSigns(){if(!confirm('Resize all signatures to 360×135? (originals are backed up)'))return;
+  $('#rsOut').textContent=' Working…';const r=await J('/api/resize-signs',{});$('#rsOut').textContent=` ${r.resized} signatures resized.`;loadScan()}
+
+/* ---- config ---- */
+function fillCfg(){
+  $('#ctab').innerHTML=Object.entries(CFG.classes).map(([k,c])=>`<tr data-k="${k}"><td><b>${k}</b></td>
+   <td><input data-f="id_prefix" value="${c.id_prefix}"></td><td><input data-f="class_text" value="${c.class_text}"></td>
+   <td><input data-f="valid" value="${c.valid}"></td><td><input data-f="start" type="number" value="${c.start||1}" style="width:80px"></td></tr>`).join('');
+  $('#issue').value=CFG.issue_date;$('#fpt').value=CFG.font_pt;$('#dpi').value=CFG.dpi;$('#fpath').value=CFG.font_path||'';
+  $('#layout').value=JSON.stringify(CFG.layout,null,2);
+}
+async function saveCfg(){
+  try{
+    const classes={};document.querySelectorAll('#ctab tr').forEach(tr=>{const o={};
+      tr.querySelectorAll('input').forEach(i=>o[i.dataset.f]=i.dataset.f=='start'?+i.value:i.value);classes[tr.dataset.k]=o});
+    const layout=JSON.parse($('#layout').value);
+    await J('/api/config',{classes,layout,issue_date:$('#issue').value,font_pt:+$('#fpt').value,dpi:+$('#dpi').value,font_path:$('#fpath').value.trim()});
+    CFG=await G('/api/config');$('#cfgOut').textContent='Saved ✓';loadScan();
+  }catch(e){$('#cfgOut').textContent='Error: '+e.message}
+}
+
+/* ---- generate ---- */
+async function loadStudents(){
+  const c=$('#pvCls').value;if(!c)return;
+  const imgs=await G('/api/images?folder='+encodeURIComponent(c));
+  $('#pvName').innerHTML=imgs.map(i=>`<option value="${i.name.replace(/\.[^.]+$/,'')}">${i.name.replace(/\.[^.]+$/,'')}</option>`).join('');
+}
+async function preview(){
+  $('#pvMsg').textContent='Rendering…';
+  const u=`/api/preview?cls=${encodeURIComponent($('#pvCls').value)}&name=${encodeURIComponent($('#pvName').value)}&t=${Date.now()}`;
+  try{const r=await api(u);const b=await r.blob();$('#pv').src=URL.createObjectURL(b);$('#pvMsg').textContent=''}catch(e){$('#pvMsg').textContent='Error: '+e.message}
+}
+async function generate(){
+  const classes=picked('#genChips');if(!classes.length)return alert('Pick at least one class');
+  $('#genBtn').disabled=true;$('#dl').innerHTML='';$('#probs').hidden=true;
+  const j=await J('/api/generate',{classes,pdf:$('#optPdf').checked,limit:$('#optTest').checked?3:0});
+  const t=setInterval(async()=>{
+    const s=await G('/api/job/'+j.id);
+    $('#bar').style.width=(s.total?100*s.done/s.total:0)+'%';
+    $('#prog').textContent=`${s.done} / ${s.total}  ${s.current}`;
+    if(s.status!='running'){clearInterval(t);$('#genBtn').disabled=false;
+      $('#prog').textContent=s.status=='done'?`Finished: ${Object.entries(s.outputs).map(([k,v])=>k+': '+v).join(' · ')}`:'Stopped with an error';
+      $('#dl').innerHTML=Object.keys(s.outputs).map(c=>`<a href="/api/zip?cls=${encodeURIComponent(c)}"><button class="b alt">⬇ ${c} (zip)</button></a>`).join('');
+      if(s.problems.length){$('#probs').hidden=false;$('#probs').textContent='Check these:\n'+s.problems.map(p=>' - '+p).join('\n')}
+      loadScan()}
+  },500);
+}
+
+/* ================= INTAKE ================= */
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const FL={no_name:['no name found','bad'],check_name:['check name','warn'],not_in_list:['not in class list','warn'],no_face:['no face found','bad'],
+ no_signature:['no signature found','bad'],error:['error','bad'],duplicate:['duplicate name','warn'],low_res:['low-res source','mut'],
+ missing_photo:['no passport yet','mut'],missing_sign:['no signature yet','mut'],from_filename:['name from file name','mut']};
+let IST=null,iTimer=null,repCtx=null;
+
+function iInit(){
+  $('#iCls').innerHTML=Object.keys(CFG.classes).map(c=>`<option>${c}</option>`).join('');
+  const ic=CFG.intake,key=ic.photo_size.join('x');
+  const has=[...$('#iPreset').options].some(o=>o.value==key);
+  $('#iPreset').value=has?key:'custom';$('#iCustom').hidden=has;
+  $('#iW').value=ic.photo_size[0];$('#iH').value=ic.photo_size[1];$('#iScale').value=ic.face_scale;$('#iTop').value=ic.top_ratio;iFrameSync();
+  $('#sW').value=ic.sign_size[0];$('#sH').value=ic.sign_size[1];
+  G('/api/intake/caps').then(c=>{$('#iCaps').innerHTML=
+    (c.opencv?pill('face detection ready','ok'):pill('OpenCV missing: pip install opencv-python-headless','bad'))+' '+
+    (c.ocr?pill('name reading (OCR) ready','ok'):pill('OCR missing: pip install rapidocr-onnxruntime – names must be typed','warn'))+
+    ` <span class="msg">Project folder: ${esc(CFG.base)} (change in Setup)</span>`});
+  iLoad();
+}
+function iFrameSync(){const k=`${(+$('#iScale').value)},${(+$('#iTop').value)}`;
+  $('#iFrame').value=[...$('#iFrame').options].some(o=>o.value==k)?k:'custom'}
+function iFramePick(){const v=$('#iFrame').value;if(v!='custom'){const [s,t]=v.split(',');$('#iScale').value=s;$('#iTop').value=t}iSaveSet()}
+function iSliders(){iFrameSync();iSaveSet()}
+function iPresetChg(){const v=$('#iPreset').value;$('#iCustom').hidden=v!='custom';
+  if(v!='custom'){const [w,h]=v.split('x');$('#iW').value=w;$('#iH').value=h}iSaveSet()}
+async function iSaveSet(){
+  await J('/api/config',{intake:{photo_size:[+$('#iW').value,+$('#iH').value],sign_size:[+$('#sW').value,+$('#sH').value],face_scale:+$('#iScale').value,top_ratio:+$('#iTop').value}});
+  CFG=await G('/api/config')}
+async function iRecrop(){await iSaveSet();
+  if(!confirm('Re-crop every passport and signature in this class with the current settings? (Names stay as they are; manual rotate/zoom adjustments are kept.)'))return;
+  await J('/api/intake/recrop-all',{cls:$('#iCls').value});iLoad()}
+
+async function iLoad(){
+  const cls=$('#iCls').value;if(!cls)return;
+  IST=await G('/api/intake/state?cls='+encodeURIComponent(cls));iRender();
+  clearTimeout(iTimer);if(IST.pending>0)iTimer=setTimeout(iPoll,1500);
+}
+function iPoll(){const a=document.activeElement;
+  if(a&&a.classList&&a.classList.contains('nm')){iTimer=setTimeout(iPoll,1500);return}iLoad()}
+
+function itemBox(it,kind,r){
+  const cls=encodeURIComponent($('#iCls').value);
+  if(!it)return `<div class="wait">${kind=='photo'?'no passport yet':'no signature yet'}<br><button class="addb" data-act="add" data-kind="${kind}" data-name="${esc(r.name)}">＋ Add ${kind=='photo'?'passport':'signature'}</button></div>`;
+  let body;
+  if(it.status=='queued'||it.status=='processing')body=`<div class="wait">processing…</div>`;
+  else if(it.status=='error')body=`<div class="wait" style="color:var(--bad)">${esc(it.error||'failed')}</div>`;
+  else body=`<img loading="lazy" data-act="full" data-id="${it.id}" src="/api/intake/img?cls=${cls}&id=${it.id}&v=${it.v}">`;
+  const z=kind=='photo'?`<button data-act="zoom" data-id="${it.id}" data-v="0.92" title="tighter">＋</button><button data-act="zoom" data-id="${it.id}" data-v="1.08" title="looser">－</button>`:'';
+  return body+`<div class="ia"><button data-act="rot" data-id="${it.id}" data-v="-90" title="rotate left">⟲</button><button data-act="rot" data-id="${it.id}" data-v="90" title="rotate right">⟳</button>${z}
+    <button data-act="rep" data-kind="${kind}" data-id="${it.id}">Replace</button><button data-act="del" data-id="${it.id}">✕</button></div>`;
+}
+function iRender(){
+  if(!IST)return;
+  const only=$('#iOnly').checked,rows=IST.rows.filter(r=>!only||r.review);
+  $('#iSum').textContent=`${IST.photos} passports · ${IST.signs} signatures · ${IST.review} need review`;
+  $('#iBarW').hidden=IST.pending==0;$('#iBar').style.width=(IST.total?100*(IST.total-IST.pending)/IST.total:0)+'%';
+  $('#iUp').textContent=IST.pending?`Processing… ${IST.total-IST.pending} / ${IST.total} done (reading names takes a few seconds per picture)`:'';
+  $('#iRows').innerHTML=rows.map(r=>{
+    const ocr=(r.photo&&r.photo.ocr)||(r.sign&&r.sign.ocr)||'';
+    const fl=r.flags.map(f=>FL[f]?pill(FL[f][0],FL[f][1]):'').join('');
+    return `<div class="irow ${r.review?'rev':''}"><div class="ph">${itemBox(r.photo,'photo',r)}</div><div class="sg">${itemBox(r.sign,'sign',r)}</div>
+      <div><input class="nm" data-ids="${r.ids.join(',')}" value="${esc(r.name)}" placeholder="type the name…" ${r.ids.length?'':'disabled'}>
+      <div class="fl">${fl}</div>${ocr?`<div class="ocr">Read from paper: <i>${esc(ocr)}</i></div>`:''}</div></div>`}).join('')
+    ||'<p class="msg">Nothing here yet – add photos and signature sheets above.</p>';
+}
+$('#iRows').addEventListener('change',async e=>{
+  if(!e.target.classList.contains('nm'))return;
+  await J('/api/intake/rename',{cls:$('#iCls').value,ids:e.target.dataset.ids.split(','),name:e.target.value});iLoad()});
+$('#iRows').addEventListener('click',async e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const cls=$('#iCls').value,a=b.dataset.act,id=b.dataset.id;
+  if(a=='rot'){await J('/api/intake/adjust',{cls,id,rot:+b.dataset.v});iLoad()}
+  else if(a=='zoom'){await J('/api/intake/adjust',{cls,id,zoom:+b.dataset.v});iLoad()}
+  else if(a=='del'){if(confirm('Remove this picture?')){await J('/api/intake/delete',{cls,ids:[id]});iLoad()}}
+  else if(a=='full')window.open(`/api/intake/img?cls=${encodeURIComponent(cls)}&id=${id}&full=1`);
+  else if(a=='rep'||a=='add'){repCtx={kind:b.dataset.kind,id:id||'',name:b.dataset.name||''};$('#fRep').value='';$('#fRep').click()}
+});
+$('#fRep').onchange=async e=>{const f=e.target.files[0];if(!f||!repCtx)return;
+  const fd=new FormData();fd.append('cls',$('#iCls').value);fd.append('kind',repCtx.kind);fd.append('id',repCtx.id);fd.append('name',repCtx.name);fd.append('file',f);
+  try{await api('/api/intake/replace',{method:'POST',body:fd})}catch(err){alert(err.message)}iLoad()};
+
+async function iUpload(kind,files){
+  files=[...files].filter(f=>/^image\//.test(f.type)||/\.(jpe?g|png)$/i.test(f.name));if(!files.length)return;
+  await iSaveSet();const cls=$('#iCls').value;
+  for(let i=0;i<files.length;i+=4){const fd=new FormData();fd.append('cls',cls);fd.append('kind',kind);
+    files.slice(i,i+4).forEach(f=>fd.append('files',f));$('#iUp').textContent=`Uploading ${Math.min(i+4,files.length)} / ${files.length}…`;
+    await api('/api/intake/upload',{method:'POST',body:fd})}
+  iLoad()}
+async function iImport(kind){const path=$(kind=='photo'?'#pPhoto':'#pSign').value.trim();if(!path)return;
+  await iSaveSet();try{const r=await J('/api/intake/import-folder',{cls:$('#iCls').value,kind,path});$('#iUp').textContent=r.added+' images queued';iLoad()}catch(e){alert(e.message)}}
+[['dzPhoto','photo','fPhoto'],['dzSign','sign','fSign']].forEach(([d,k,f])=>{const z=$('#'+d);
+  z.ondragover=e=>{e.preventDefault();z.classList.add('over')};z.ondragleave=()=>z.classList.remove('over');
+  z.ondrop=e=>{e.preventDefault();z.classList.remove('over');iUpload(k,e.dataTransfer.files)};
+  $('#'+f).onchange=e=>iUpload(k,e.target.files)});
+
+function openRoster(){$('#rText').value=IST?IST.roster:'';$('#dRoster').showModal()}
+async function saveRoster(rematch){const r=await J('/api/intake/roster',{cls:$('#iCls').value,text:$('#rText').value,rematch});
+  $('#dRoster').close();if(rematch)$('#iUp').textContent=r.rematched+' names re-matched to the class list';iLoad()}
+function openNames(){if(!IST)return;$('#nText').value=IST.rows.map(r=>r.name).join('\n');$('#dNames').showModal()}
+async function applyNames(){
+  const lines=$('#nText').value.replace(/\n$/,'').split('\n'),rows=IST.rows;
+  if(lines.length!=rows.length)return alert(`The list has ${rows.length} rows but you have ${lines.length} lines. Keep exactly one name per line.`);
+  const ch=[];rows.forEach((r,i)=>{const n=lines[i].trim().replace(/\s+/g,' ').toUpperCase();if(n!=r.name)ch.push({ids:r.ids,name:n})});
+  if(ch.length)await J('/api/intake/rename-many',{cls:$('#iCls').value,changes:ch});
+  $('#dNames').close();$('#iUp').textContent=ch.length+' names changed';iLoad()}
+async function iCommit(){
+  const cls=$('#iCls').value;
+  if(IST&&IST.pending&&!confirm('Some pictures are still processing and will be skipped. Save the finished ones anyway?'))return;
+  let r=await J('/api/intake/commit',{cls});
+  if(r.conflicts.length&&confirm(`${r.conflicts.length} files already exist in the project (e.g. ${r.conflicts.slice(0,3).join(', ')}).\nOverwrite them with these new ones?`))
+    r=await J('/api/intake/commit',{cls,overwrite:true});
+  alert(`Saved ${r.written.photo} passports to ${cls}/ and ${r.written.sign} signatures to SIGNS/.`+
+    (r.conflicts.length?`\n${r.conflicts.length} existing files were left unchanged.`:'')+(r.skipped.length?`\n\nNot saved:\n- `+r.skipped.join('\n- '):''));
+  loadScan()}
+
+init();
+</script>
+</body>
+</html>

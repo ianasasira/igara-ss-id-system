@@ -1,0 +1,5 @@
+flask>=3.0
+pillow>=10.0
+numpy>=1.26
+opencv-python-headless>=4.8
+rapidocr-onnxruntime>=1.3

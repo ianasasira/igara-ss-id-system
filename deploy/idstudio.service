@@ -1,0 +1,14 @@
+# /etc/systemd/system/idstudio.service      (no Docker version)
+[Unit]
+Description=Igara ID Studio
+After=network.target
+
+[Service]
+User=idstudio
+WorkingDirectory=/opt/igara-id-studio
+EnvironmentFile=/etc/igara-id-studio.env
+ExecStart=/opt/igara-id-studio/venv/bin/gunicorn -c gunicorn.conf.py wsgi:app
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

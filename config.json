@@ -1,0 +1,113 @@
+{
+  "base": "/home/ianasasiratusiime/Desktop/gara id",
+  "issue_date": "01/07/2026",
+  "font_pt": 7.8,
+  "dpi": 300,
+  "font_path": "",
+  "classes": {
+    "S.1": {
+      "id_prefix": "26/ISS-26",
+      "class_text": "S.1 - S.4",
+      "valid": "31/12/2029",
+      "start": 1
+    },
+    "S.2": {
+      "id_prefix": "26/ISS-25",
+      "class_text": "S.1 - S.4",
+      "valid": "31/12/2028",
+      "start": 1
+    },
+    "S.3": {
+      "id_prefix": "26/ISS-24",
+      "class_text": "S.1 - S.4",
+      "valid": "31/12/2027",
+      "start": 1
+    },
+    "S.4": {
+      "id_prefix": "26/ISS-23",
+      "class_text": "S.1 - S.4",
+      "valid": "31/12/2026",
+      "start": 1
+    },
+    "S.5": {
+      "id_prefix": "26/ISS-22",
+      "class_text": "S.5 - S.6",
+      "valid": "31/12/2027",
+      "start": 1
+    },
+    "S.6": {
+      "id_prefix": "26/ISS-21",
+      "class_text": "S.6",
+      "valid": "31/12/2026",
+      "start": 1
+    }
+  },
+  "intake": {
+    "photo_size": [
+      2605,
+      3120
+    ],
+    "sign_size": [
+      360,
+      135
+    ],
+    "face_scale": 2.1,
+    "top_ratio": 0.215
+  },
+  "layout": {
+    "photo_box": [
+      29,
+      195,
+      344,
+      510
+    ],
+    "frame_box": [
+      27,
+      193,
+      345,
+      511
+    ],
+    "frame_w": 3,
+    "face_bias": 0.2,
+    "sign_box": [
+      752,
+      518,
+      950,
+      598
+    ],
+    "text_pos": {
+      "name": [
+        510,
+        293
+      ],
+      "id": [
+        518,
+        349
+      ],
+      "class": [
+        518,
+        408
+      ],
+      "issue": [
+        518,
+        467
+      ],
+      "valid": [
+        838,
+        467
+      ]
+    },
+    "max_right": {
+      "name": 1000,
+      "id": 1000,
+      "class": 1000,
+      "issue": 706,
+      "valid": 1005
+    },
+    "text_color": [
+      16,
+      38,
+      66
+    ]
+  }
+}
